@@ -2,14 +2,14 @@
   "builds":[
     {
 
-    "run.py",
+     "src": "project/run.py",
   "use":"@vercel/python"
 }
 ],
 "routes":[
   {
     "src":"/(.*)",
-    "dest":"run.py"
+    "dest":"project/run.py"
   }
 ]
 }
