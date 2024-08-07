@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update ToDo</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    .container {
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    h1 {
+      text-align: center;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>ToDo App</h1>
+    <button onclick="window.location.href='/add'">Add</button>
+    <button onclick="window.location.href='/update'">Update</button>
+    <button onclick="window.location.href='/delete'">Delete</button>
+    <button onclick="window.location.href='/display'">Display</button>
+  </div> <br>
+  <div class="container">
+    <h1>ToDo List</h1>
+    <table id="todo-table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>City</th>
+          <th>College</th>
+          <th>Pass Year</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- ToDo items will be inserted here -->
+      </tbody>
+    </table>
+  </div>
+  <div class="container">
+    <h1>Update ToDo</h1>
+    <form id="update-todo-form">
+      <label for="id">ID:</label>
+      <input type="number" id="id" name="id" required>
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name">
+      <label for="city">City:</label>
+      <input type="text" id="city" name="city">
+      <label for="college">College:</label>
+      <input type="text" id="college" name="college">
+      <label for="passyear">Pass Year:</label>
+      <input type="number" id="passyear" name="passyear">
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", async function () {
+      // Fetch and display ToDo list
+      const todoTableBody = document.querySelector('#todo-table tbody');
+      
+      try {
+        const response = await fetch('/todos');
+        if (response.ok) {
+          const todos = await response.json();
+          todos.forEach(todo => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${todo.id}</td>
+              <td>${todo.name}</td>
+              <td>${todo.city}</td>
+              <td>${todo.college}</td>
+              <td>${todo.passyear}</td>
+            `;
+            todoTableBody.appendChild(row);
+          });
+        } else {
+          const row = document.createElement('tr');
+          row.innerHTML = `<td colspan="5">Error fetching ToDo list</td>`;
+          todoTableBody.appendChild(row);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        const row = document.createElement('tr');
+        row.innerHTML = `<td colspan="5">Error fetching ToDo list</td>`;
+        todoTableBody.appendChild(row);
+      }
+      
+      // Handle form submission for updating a ToDo
+      const updateForm = document.getElementById('update-todo-form');
+      updateForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        
+        const id = document.getElementById('id').value;
+        const name = document.getElementById('name').value;
+        const city = document.getElementById('city').value;
+        const college = document.getElementById('college').value;
+        const passyear = document.getElementById('passyear').value;
+
+        try {
+          const response = await fetch(`/todos/${id}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ name, city, college, passyear })
+          });
+
+          if (response.ok) {
+            alert('ToDo updated successfully');
+            updateForm.reset();
+          } else if (response.status === 404) {
+            alert('ToDo not found');
+          } else {
+            alert('Error updating ToDo');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert('Error updating ToDo');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

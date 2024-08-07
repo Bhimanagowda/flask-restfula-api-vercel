@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add ToDo</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1>ToDo App</h1>
+    <button onclick="window.location.href='/add'">Add</button>
+    <button onclick="window.location.href='/update'">Update</button>
+    <button onclick="window.location.href='/delete'">Delete</button>
+    <button onclick="window.location.href='/display'">Display</button>
+  </div>
+  <div class="container">
+    <h1>Add ToDo</h1>
+    <form id="add-todo-form">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+      <label for="city">City:</label>
+      <input type="text" id="city" name="city" required>
+      <label for="college">College:</label>
+      <input type="text" id="college" name="college" required>
+      <label for="passyear">Pass Year:</label>
+      <input type="number" id="passyear" name="passyear" required>
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
